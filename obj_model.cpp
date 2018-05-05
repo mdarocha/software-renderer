@@ -1,5 +1,6 @@
 #include <string>
 #include <sstream>
+#include <limits>
 #include "obj_model.h"
 
 OBJModel::OBJModel() {
@@ -20,15 +21,51 @@ OBJModel::~OBJModel() {
 }
 
 int OBJModel::get_face_count() {
-    return vertices.size();
+    return faces.size();
 }
 
 Vector3f OBJModel::get_face_vertex(int n, int nvertex) {
     if(nvertex > 3) return Vector3f{0,0,0};
+    if((size_t)n > faces.size()) return Vector3f{0,0,0};
+
+    if((size_t)faces[n].vertex[nvertex] > vertices.size()) {
+        std::cerr << "Warning: bad vertex indice in face " << n << std::endl;
+    }
 
     return vertices[faces[n].vertex[nvertex]];
 }
 
+void OBJModel::compute_bounding_box() {
+    Vector3f vmax, vmin;
+    vmax.x = vmax.y = vmax.z = std::numeric_limits<float>::min();
+    vmin.x = vmin.y = vmin.z = std::numeric_limits<float>::max();
+
+    int nvec = vertices.size();
+    for(int i = 0; i < nvec; i++) {
+        vmax.x = std::max(vertices[i].x, vmax.x);
+        vmax.y = std::max(vertices[i].y, vmax.y);
+        vmax.z = std::max(vertices[i].z, vmax.z);
+
+        vmin.x = std::min(vertices[i].x, vmin.x);
+        vmin.y = std::min(vertices[i].y, vmin.y);
+        vmin.z = std::min(vertices[i].z, vmin.z);
+    }
+
+    bounding_box.x = std::abs(vmax.x - vmin.x);
+    bounding_box.y = std::abs(vmax.y - vmin.y);
+    bounding_box.z = std::abs(vmax.z - vmin.z);
+}
+
+void OBJModel::normalize_model_scale() {
+    float scale = std::max(bounding_box.x, std::max(bounding_box.y, bounding_box.z));
+    int nvec = vertices.size();
+
+    for(int i = 0; i < nvec; i++) {
+        vertices[i].x /= scale;
+        vertices[i].y /= scale;
+        vertices[i].z /= scale;
+    }
+}
 std::istream& operator >>(std::istream &input, OBJModel &object) {
     std::string line;
     std::string token;
@@ -71,6 +108,8 @@ std::istream& operator >>(std::istream &input, OBJModel &object) {
             std::cerr << "Warning - unknown token when parsing .obj file: " << token << std::endl;
         }
     }
+
+    object.compute_bounding_box();
 
     std::cout << "Loaded model, " << object.vertices.size() << " vertices, " << object.faces.size() << " faces\n";
 

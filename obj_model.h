@@ -25,6 +25,8 @@ class OBJModel {
         ~OBJModel();
         friend std::istream& operator >>(std::istream &input, OBJModel &object);
 
+        void normalize_model_scale();
+
         int get_face_count();
         Vector3f get_face_vertex(int nface, int nvertex);
 };
