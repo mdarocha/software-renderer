@@ -21,6 +21,8 @@ class PPMImage {
         int get_height() const;
         const unsigned char* get_data() const;
         PPMColor* get(int x, int y) const;
+
+        friend std::ostream& operator <<(std::ostream &output, const PPMImage &object);
 };
 
-std::ostream& operator <<(std::ostream &output, const PPMImage &object);
+
