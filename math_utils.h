@@ -9,9 +9,9 @@ struct Point3D {
 };
 
 struct Vector2f {
-    float x, y;
+    double x, y;
 };
 
 struct Vector3f {
-    float x, y, z;
+    double x, y, z;
 };
