@@ -38,10 +38,10 @@ namespace DrawingUtils {
         }
     }
 
-    void triangle(Point2D a, Point2D b, Point2D c, PPMColor color, PPMImage &image) {
+    void triangle(Triangle t, PPMColor color, PPMImage &image) {
         using namespace DrawingUtils;
-        line(a, b, color, image);
-        line(b, c, color, image);
-        line(c, a, color, image);
+        line(t[0], t[1], color, image);
+        line(t[1], t[2], color, image);
+        line(t[2], t[0], color, image);
     }
 }
