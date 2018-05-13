@@ -3,31 +3,7 @@
 #include <cstring>
 #include "ppm_image.h"
 
-PPMImage::PPMImage(int w, int h) {
-    data = new unsigned char[w * h * 3];
-    std::memset(data, 0, w * h * 3);
-
-    this->width = w;
-    this->height = h;
-}
-
-PPMImage::~PPMImage() {
-    if(data != nullptr) {
-        delete [] data;
-    }
-}
-
-int PPMImage::get_height() const {
-    return this->height;
-}
-
-int PPMImage::get_width() const {
-    return this->width;
-}
-
-const unsigned char*  PPMImage::get_data() const {
-    return this->data;
-}
+PPMImage::PPMImage(int w, int h) : ImageBuffer(w, h, 3) {};
 
 bool PPMImage::write_to_file(const char *filename) const {
     std::ofstream file;
@@ -40,13 +16,13 @@ bool PPMImage::write_to_file(const char *filename) const {
     return true;
 }
 
-bool PPMImage::set(int x, int y, const PPMColor *color) {
+bool PPMImage::set(int x, int y, const PPMColor &color) {
     if(!data || x < 0 || y < 0 || x > width || y > height) {
         std::cerr << "Error setting pixel " << x << " " << y << std::endl;
         return false;
     }
 
-    std::memcpy(data + (x + y * width) * 3, color, 3);
+    std::memcpy(data + (x + y * width) * 3, &color, 3);
     return true;
 }
 

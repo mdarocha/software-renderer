@@ -1,5 +1,6 @@
 #include "math_utils.h"
 #include <iostream>
+
 template <class T, size_t dim> T operator *(const MathVector<T, dim> &left, const MathVector<T, dim> &right) {
     T sum = T();
     for(size_t i = 0; i < dim; i++)
@@ -23,14 +24,12 @@ template <class T> MathVector<T, 3> MathVector<T, 3>::cross(MathVector<T, 3> v) 
     return MathVector<T, 3>(y * v.z - z * v.y, z * v.x - x * v.z,  x * v.y - y * v.x);
 }
 
-Triangle::Triangle() {
+Triangle::Triangle() : p1(), p2(), p3() {
     p1 = p2 = p3 = Point2D{0,0};
 }
 
-Triangle::Triangle(Point2D p1, Point2D p2, Point2D p3) {
-    this->p1 = p1;
-    this->p2 = p2;
-    this->p3 = p3;
+Triangle::Triangle(Point2D p1, Point2D p2, Point2D p3) : p1(p1), p2(p2), p3(p3) {
+
 }
 
 Vector3f Triangle::get_barycentric_coords(Point2D p) {

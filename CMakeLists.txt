@@ -4,7 +4,7 @@ project(software-renderer CXX)
 
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(GCC_COMPILE_FLAGS "-Wall -Wextra -pedantic")
+set(GCC_COMPILE_FLAGS "-Wall -Wextra -pedantic -Weffc++")
 add_definitions(${GCC_COMPILE_FLAGS})
 
 include_directories(include/)
@@ -14,6 +14,7 @@ set(INCLUDES
     include/drawing_utils.h
     include/math_utils.h
     include/obj_model.h
+    include/image_buffer.h
 )
 set(SOURCES
     src/main.cpp
@@ -21,6 +22,7 @@ set(SOURCES
     src/ppm_image.cpp
     src/obj_model.cpp
     src/math_utils.cpp
+    src/image_buffer.cpp
 )
 
 add_executable(softrender ${SOURCES} ${INCLUDES})

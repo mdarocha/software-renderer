@@ -25,9 +25,9 @@ namespace DrawingUtils {
 
         for(int x = start.x; x < end.x; x++) {
             if(is_steep) {
-                image.set(y, x, &color);
+                image.set(y, x, color);
             } else {
-                image.set(x, y, &color);
+                image.set(x, y, color);
             }
 
             error += derror;
@@ -64,7 +64,7 @@ namespace DrawingUtils {
                 if(a.x < 0 || a.y < 0 || a.z < 0)
                     continue;
 
-                image.set(p.x, p.y, &color);
+                image.set(p.x, p.y, color);
             }
         }
     }
