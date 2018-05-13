@@ -44,4 +44,28 @@ namespace DrawingUtils {
         line(t[1], t[2], color, image);
         line(t[2], t[0], color, image);
     }
+
+    void filled_triangle(Triangle t, PPMColor color, PPMImage &image) {
+        Point2D bounding_box_min;
+        Point2D bounding_box_max;
+
+        bounding_box_max.x = std::max(t[0].x, std::max(t[1].x, t[2].x));
+        bounding_box_max.y = std::max(t[0].y, std::max(t[1].y, t[2].y));
+
+        bounding_box_min.x = std::min(t[0].x, std::min(t[1].x, t[2].x));
+        bounding_box_min.y = std::min(t[0].y, std::min(t[1].y, t[2].y));
+
+        Point2D p;
+        Vector3f a;
+        for(p.x = bounding_box_min.x; p.x < bounding_box_max.x; p.x++) {
+            for(p.y = bounding_box_min.y; p.y < bounding_box_max.y; p.y++) {
+                a = t.get_barycentric_coords(p);
+
+                if(a.x < 0 || a.y < 0 || a.z < 0)
+                    continue;
+
+                image.set(p.x, p.y, &color);
+            }
+        }
+    }
 }

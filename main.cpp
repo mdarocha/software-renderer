@@ -10,6 +10,7 @@ int main() {
 
     PPMImage image(width, height);
     PPMColor white = {255,255,255};
+    PPMColor red = {255,0,0};
 
     OBJModel model("../teapot.obj");
     model.normalize_model_scale();
@@ -27,7 +28,8 @@ int main() {
             t[j].y = (int) ((v[j].y + 1.0f) * height / 2.0f);
         }
 
-        DrawingUtils::triangle(t, white, image);
+        DrawingUtils::filled_triangle(t, white, image);
+        DrawingUtils::triangle(t, red, image);
     }
 
     image.write_to_file("test.ppm");

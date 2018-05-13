@@ -6,4 +6,5 @@
 namespace DrawingUtils {
     void line(Point2D start, Point2D end, PPMColor color, PPMImage &image);
     void triangle(Triangle triangle, PPMColor color, PPMImage &image);
+    void filled_triangle(Triangle triangle, PPMColor color, PPMImage &image);
 }

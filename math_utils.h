@@ -54,6 +54,8 @@ class MathVector<T, 3> {
         MathVector() : x(T()), y(T()), z(T()) {};
         MathVector(T X, T Y, T Z) : x(X), y(Y), z(Z) {}
 
+        MathVector<T, 3> cross(MathVector<T, 3> v);
+
         T& operator [](const size_t i) {
             assert(i < 3);
             switch(i) {
@@ -62,7 +64,7 @@ class MathVector<T, 3> {
                 case 1:
                     return y;
                 case 2:
-                    return y;
+                    return z;
             }
         }
         const T& operator [](const size_t i) const {
@@ -73,7 +75,7 @@ class MathVector<T, 3> {
                 case 1:
                     return y;
                 case 2:
-                    return y;
+                    return z;
             }
         }
 };
@@ -91,7 +93,7 @@ class Triangle {
         Triangle();
         Triangle(Point2D p1, Point2D p2, Point2D p3);
 
-        Point2D get_barycentric_coords(Point2D p);
+        Vector3f get_barycentric_coords(Point2D p);
 
         Point2D& operator [](const size_t i) {
             assert(i < 3);
@@ -99,7 +101,7 @@ class Triangle {
                 return p1;
             else if(i == 1)
                 return p2;
-            else if(i == 2)
+            else
                 return p3;
         };
 };
