@@ -50,6 +50,17 @@ bool PPMImage::set(int x, int y, const PPMColor *color) {
     return true;
 }
 
+PPMColor* PPMImage::get(int x, int y) const {
+    if(!data || x < 0 || y < 0 || x > width || y > height) {
+        std::cerr << "Error getting pixel " << x << " " << y << std::endl;
+        return nullptr;
+    }
+
+    PPMColor* temp = new PPMColor();
+    std::memcpy(temp, data + (x + y * width) * 3, 3);
+    return temp;
+}
+
 std::ostream& operator <<(std::ostream &output, const PPMImage &object) {
     output << "P6" << "\n" << object.get_width() << " " << object.get_height() << "\n" << "255\n";
     output.write(reinterpret_cast<const char*>(object.get_data()), object.get_width() * object.get_height() * 3);
