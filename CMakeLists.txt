@@ -7,5 +7,20 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(GCC_COMPILE_FLAGS "-Wall -Wextra -pedantic")
 add_definitions(${GCC_COMPILE_FLAGS})
 
-set(SOURCES drawing_utils.cpp ppm_image.cpp obj_model.cpp math_utils.cpp)
-add_executable(softrender main.cpp ${SOURCES})
+include_directories(include/)
+
+set(INCLUDES
+    include/ppm_image.h
+    include/drawing_utils.h
+    include/math_utils.h
+    include/obj_model.h
+)
+set(SOURCES
+    src/main.cpp
+    src/drawing_utils.cpp
+    src/ppm_image.cpp
+    src/obj_model.cpp
+    src/math_utils.cpp
+)
+
+add_executable(softrender ${SOURCES} ${INCLUDES})
