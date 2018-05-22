@@ -17,24 +17,11 @@ bool PPMImage::write_to_file(const char *filename) const {
 }
 
 bool PPMImage::set(int x, int y, const PPMColor &color) {
-    if(!data || x < 0 || y < 0 || x > width || y > height) {
-        std::cerr << "Error setting pixel " << x << " " << y << std::endl;
-        return false;
-    }
-
-    std::memcpy(data + (x + y * width) * 3, &color, 3);
-    return true;
+    return ImageBuffer::set(x, y, (unsigned char*) &color);
 }
 
 PPMColor* PPMImage::get(int x, int y) const {
-    if(!data || x < 0 || y < 0 || x > width || y > height) {
-        std::cerr << "Error getting pixel " << x << " " << y << std::endl;
-        return nullptr;
-    }
-
-    PPMColor* temp = new PPMColor();
-    std::memcpy(temp, data + (x + y * width) * 3, 3);
-    return temp;
+    return (PPMColor*) ImageBuffer::get(x, y);
 }
 
 std::ostream& operator <<(std::ostream &output, const PPMImage &object) {
