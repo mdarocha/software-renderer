@@ -28,5 +28,5 @@ class OBJModel {
         void normalize_model_scale();
 
         int get_face_count();
-        bool get_face_vertices(Vector3f *v, int nface);
+        Triangle<Vector3f> get_face_vertices(int nface);
 };

@@ -3,13 +3,13 @@
 namespace DrawingUtils {
     void rasterize(OBJModel &model, PPMImage &image) {
         PPMColor white = {255,255,255};
-        PPMColor red = {255,0,0};
 
         int nfaces = model.get_face_count();
-        Vector3f v[3];
-        Triangle t;
+
+        Triangle<Vector3f> v;
+        Triangle<Point2D> t;
         for(int i = 0; i < nfaces; i++) {
-            model.get_face_vertices(v, i);
+            v = model.get_face_vertices(i);
 
             for(int j = 0; j < 3; j++) {
                 t[j].x = (int) ((v[j].x + 1.0f) * image.get_width() / 2.0f);
@@ -17,7 +17,6 @@ namespace DrawingUtils {
             }
 
             filled_triangle(t, white, image);
-            triangle(t, red, image);
         }
     }
 
@@ -58,13 +57,13 @@ namespace DrawingUtils {
         }
     }
 
-    void triangle(Triangle t, PPMColor color, PPMImage &image) {
+    void triangle(Triangle<Point2D> t, PPMColor color, PPMImage &image) {
         line(t[0], t[1], color, image);
         line(t[1], t[2], color, image);
         line(t[2], t[0], color, image);
     }
 
-    void filled_triangle(Triangle t, PPMColor color, PPMImage &image) {
+    void filled_triangle(Triangle<Point2D> t, PPMColor color, PPMImage &image) {
         Point2D bounding_box_min;
         Point2D bounding_box_max;
 

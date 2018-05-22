@@ -24,8 +24,10 @@ int OBJModel::get_face_count() {
     return faces.size();
 }
 
-bool OBJModel::get_face_vertices(Vector3f *v, int n) {
+Triangle<Vector3f> OBJModel::get_face_vertices(int n) {
     assert((size_t)n < faces.size());
+
+    Triangle<Vector3f> v;
 
     for(int i = 0; i < 3; i++) {
         if((size_t)faces[n].vertex[i] > vertices.size()) {
@@ -35,7 +37,7 @@ bool OBJModel::get_face_vertices(Vector3f *v, int n) {
         v[i] = vertices[faces[n].vertex[i]];
     }
 
-    return true;
+    return v;
 }
 
 void OBJModel::compute_bounding_box() {

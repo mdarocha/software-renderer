@@ -86,16 +86,17 @@ typedef MathVector<double, 2> Vector2f;
 typedef MathVector<int, 3> Point3D;
 typedef MathVector<double, 3> Vector3f;
 
+template<class T>
 class Triangle {
     public:
-        Point2D p1, p2, p3;
+        T p1, p2, p3;
 
-        Triangle();
-        Triangle(Point2D p1, Point2D p2, Point2D p3);
+        Triangle() : p1(T()), p2(T()), p3(T()) {};
+        Triangle(T P1, T P2, T P3) : p1(P1), p2(P2), p3(P3) {};
 
-        Vector3f get_barycentric_coords(Point2D p);
+        Vector3f get_barycentric_coords(T p);
 
-        Point2D& operator [](const size_t i) {
+        T& operator [](const size_t i) {
             assert(i < 3);
             if(i == 0)
                 return p1;

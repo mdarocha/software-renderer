@@ -24,15 +24,8 @@ template <class T> MathVector<T, 3> MathVector<T, 3>::cross(MathVector<T, 3> v) 
     return MathVector<T, 3>(y * v.z - z * v.y, z * v.x - x * v.z,  x * v.y - y * v.x);
 }
 
-Triangle::Triangle() : p1(), p2(), p3() {
-    p1 = p2 = p3 = Point2D{0,0};
-}
-
-Triangle::Triangle(Point2D p1, Point2D p2, Point2D p3) : p1(p1), p2(p2), p3(p3) {
-
-}
-
-Vector3f Triangle::get_barycentric_coords(Point2D p) {
+template <>
+Vector3f Triangle<Point2D>::get_barycentric_coords(Point2D p) {
     Vector3f v[2];
 
     for(int i = 0; i < 2; i++) {
@@ -44,7 +37,7 @@ Vector3f Triangle::get_barycentric_coords(Point2D p) {
     Vector3f u = v[0].cross(v[1]);
 
     if(std::abs(u[2]) < 1)
-            return Vector3f(-1,1,1);
+        return Vector3f(-1,1,1);
 
     return Vector3f(1.0f - (u.x + u.y)/u.z, u.y/u.z, u.x/u.z);
 }
