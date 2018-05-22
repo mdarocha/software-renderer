@@ -29,4 +29,6 @@ class OBJModel {
 
         int get_face_count();
         Triangle<Vector3f> get_face_vertices(int nface);
+        Triangle<Vector3f> get_face_normals(int nface);
+        Triangle<Vector2f> get_face_uv(int nface);
 };

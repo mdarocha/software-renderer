@@ -2,21 +2,35 @@
 
 namespace DrawingUtils {
     void rasterize(OBJModel &model, PPMImage &image) {
-        PPMColor white = {255,255,255};
-
         int nfaces = model.get_face_count();
 
+        Vector3f light_direction(0,0,1);
+        double intensity;
+
         Triangle<Vector3f> v;
+        Triangle<Vector3f> n;
+
         Triangle<Point2D> t;
         for(int i = 0; i < nfaces; i++) {
             v = model.get_face_vertices(i);
+            n = model.get_face_normals(i);
 
             for(int j = 0; j < 3; j++) {
                 t[j].x = (int) ((v[j].x + 1.0f) * image.get_width() / 2.0f);
                 t[j].y = (int) ((v[j].y + 1.0f) * image.get_height() / 2.0f);
             }
 
-            filled_triangle(t, white, image);
+            intensity = 0;
+            for(int k = 0; k < 3; k++) {
+                intensity += n[k] * light_direction;
+            }
+            intensity /= 3;
+
+            if(intensity > 0) {
+                if(intensity > 1)
+                    intensity = 1;
+                filled_triangle(t, PPMColor{(unsigned char)(intensity*255),(unsigned char)(intensity*255),(unsigned char)(intensity*255)}, image);
+            }
         }
     }
 

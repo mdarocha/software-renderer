@@ -40,6 +40,23 @@ Triangle<Vector3f> OBJModel::get_face_vertices(int n) {
     return v;
 }
 
+Triangle<Vector3f> OBJModel::get_face_normals(int n) {
+    assert((size_t)n < faces.size());
+
+    Triangle<Vector3f> v;
+
+    for(int i = 0; i < 3; i++) {
+        if((size_t)faces[n].normal[i] > normals.size()) {
+            std::cerr << "Warning: bad normal indice in face " << n << std::endl;
+        }
+
+        v[i] = normals[faces[n].normal[i]];
+    }
+
+    return v;
+}
+
+
 void OBJModel::compute_bounding_box() {
     Vector3f vmax, vmin;
     vmax.x = vmax.y = vmax.z = std::numeric_limits<float>::min();
