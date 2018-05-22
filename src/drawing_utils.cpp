@@ -1,6 +1,26 @@
 #include "drawing_utils.h"
 
 namespace DrawingUtils {
+    void rasterize(OBJModel &model, PPMImage &image) {
+        PPMColor white = {255,255,255};
+        PPMColor red = {255,0,0};
+
+        int nfaces = model.get_face_count();
+        Vector3f v[3];
+        Triangle t;
+        for(int i = 0; i < nfaces; i++) {
+            model.get_face_vertices(v, i);
+
+            for(int j = 0; j < 3; j++) {
+                t[j].x = (int) ((v[j].x + 1.0f) * image.get_width() / 2.0f);
+                t[j].y = (int) ((v[j].y + 1.0f) * image.get_height() / 2.0f);
+            }
+
+            filled_triangle(t, white, image);
+            triangle(t, red, image);
+        }
+    }
+
     void line(Point2D start, Point2D end, PPMColor color, PPMImage &image) {
         bool is_steep = false;
         //if we are drawing a steep line, transpose the image
@@ -39,7 +59,6 @@ namespace DrawingUtils {
     }
 
     void triangle(Triangle t, PPMColor color, PPMImage &image) {
-        using namespace DrawingUtils;
         line(t[0], t[1], color, image);
         line(t[1], t[2], color, image);
         line(t[2], t[0], color, image);

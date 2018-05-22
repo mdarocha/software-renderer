@@ -24,15 +24,18 @@ int OBJModel::get_face_count() {
     return faces.size();
 }
 
-Vector3f OBJModel::get_face_vertex(int n, int nvertex) {
-    if(nvertex > 3) return Vector3f{0,0,0};
-    if((size_t)n > faces.size()) return Vector3f{0,0,0};
+bool OBJModel::get_face_vertices(Vector3f *v, int n) {
+    assert((size_t)n < faces.size());
 
-    if((size_t)faces[n].vertex[nvertex] > vertices.size()) {
-        std::cerr << "Warning: bad vertex indice in face " << n << std::endl;
+    for(int i = 0; i < 3; i++) {
+        if((size_t)faces[n].vertex[i] > vertices.size()) {
+            std::cerr << "Warning: bad vertex indice in face " << n << std::endl;
+        }
+
+        v[i] = vertices[faces[n].vertex[i]];
     }
 
-    return vertices[faces[n].vertex[nvertex]];
+    return true;
 }
 
 void OBJModel::compute_bounding_box() {

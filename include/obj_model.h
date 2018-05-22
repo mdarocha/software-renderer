@@ -28,5 +28,5 @@ class OBJModel {
         void normalize_model_scale();
 
         int get_face_count();
-        Vector3f get_face_vertex(int nface, int nvertex);
+        bool get_face_vertices(Vector3f *v, int nface);
 };
