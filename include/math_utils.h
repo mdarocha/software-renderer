@@ -24,9 +24,25 @@ class MathVector {
         }
 };
 
-template <class T, size_t dim> T operator *(const MathVector<T, dim> &left, const MathVector<T, dim> &right);
-template <class T, size_t dim> MathVector<T, dim> operator +(const MathVector<T, dim> &left, const MathVector<T, dim> &right);
-template <class T, size_t dim> MathVector<T, dim> operator -(const MathVector<T, dim> &left, const MathVector<T, dim> &right);
+template <class T, size_t dim> T operator *(const MathVector<T, dim> &left, const MathVector<T, dim> &right) {
+    T sum = T();
+    for(size_t i = 0; i < dim; i++)
+        sum += left[i] * right[i];
+
+    return sum;
+}
+
+template <class T, size_t dim> MathVector<T, dim> operator +(MathVector<T, dim> left, const MathVector<T, dim>& right) {
+    for(size_t i = 0; i < dim; i++)
+        left[i] += right[i];
+    return left;
+}
+
+template <class T, size_t dim> MathVector<T, dim> operator -(MathVector<T, dim> left, const MathVector<T, dim>& right) {
+    for(size_t i = 0; i < dim; i++)
+        left[i] -= right[i];
+    return left;
+}
 
 template <class T>
 class MathVector<T, 2> {
