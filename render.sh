@@ -1,6 +1,6 @@
 #!/bin/sh
 cd build/
 make
-./softrender
+./softrender ../teapot.obj test.ppm 2000 2000
 cd ..
-feh build/test.ppm
+feh --force-aliasing build/test.ppm
