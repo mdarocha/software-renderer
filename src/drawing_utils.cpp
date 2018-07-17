@@ -4,21 +4,17 @@ namespace DrawingUtils {
     void rasterize(OBJModel &model, PPMImage &image) {
         int nfaces = model.get_face_count();
 
+        ImageBuffer depth_buffer = ImageBuffer::create<double>(image.get_width(), image.get_height());
+
         Vector3f light_direction(0,0,1);
         double intensity;
 
         Triangle<Vector3f> v;
         Triangle<Vector3f> n;
 
-        Triangle<Point2D> t;
         for(int i = 0; i < nfaces; i++) {
             v = model.get_face_vertices(i);
             n = model.get_face_normals(i);
-
-            for(int j = 0; j < 3; j++) {
-                t[j].x = (int) ((v[j].x + 1.0f) * image.get_width() / 2.0f);
-                t[j].y = (int) ((v[j].y + 1.0f) * image.get_height() / 2.0f);
-            }
 
             intensity = 0;
             for(int k = 0; k < 3; k++) {
@@ -29,9 +25,17 @@ namespace DrawingUtils {
             if(intensity > 0) {
                 if(intensity > 1)
                     intensity = 1;
-                filled_triangle(t, PPMColor{(unsigned char)(intensity*255),(unsigned char)(intensity*255),(unsigned char)(intensity*255)}, image);
+                shaded_triangle(v, PPMColor{(unsigned char)(intensity*255),(unsigned char)(intensity*255),(unsigned char)(intensity*255)}, image, depth_buffer);
             }
         }
+
+        /*double depth;
+        for(int x = 0; x < image.get_width(); x++) {
+            for(int y = 0; y < image.get_height(); y++) {
+                depth = depth_buffer.get<double>(x, y);
+                image.set(x, y, PPMColor{(unsigned char)(depth*255),(unsigned char)(depth*255),(unsigned char)(depth*255)});
+            }
+        }*/
     }
 
     void line(Point2D start, Point2D end, PPMColor color, PPMImage &image) {
@@ -77,9 +81,17 @@ namespace DrawingUtils {
         line(t[2], t[0], color, image);
     }
 
-    void filled_triangle(Triangle<Point2D> t, PPMColor color, PPMImage &image) {
-        Point2D bounding_box_min;
-        Point2D bounding_box_max;
+    void shaded_triangle(Triangle<Vector3f> &triangle, PPMColor color, PPMImage &image, ImageBuffer &depth_buffer) {
+        Triangle<Vector3f> t;
+
+        for(int i = 0; i < 3; i++) {
+            t[i].x = (int)((triangle[i].x + 1.0f) * image.get_width() / 2.0f + 0.5f);
+            t[i].y = (int)((triangle[i].y + 1.0f) * image.get_height() / 2.0f + 0.5f);
+            t[i].z = triangle[i].z + 1.0f;
+        }
+
+        Vector2f bounding_box_min;
+        Vector2f bounding_box_max;
 
         bounding_box_max.x = std::max(t[0].x, std::max(t[1].x, t[2].x));
         bounding_box_max.y = std::max(t[0].y, std::max(t[1].y, t[2].y));
@@ -87,7 +99,7 @@ namespace DrawingUtils {
         bounding_box_min.x = std::min(t[0].x, std::min(t[1].x, t[2].x));
         bounding_box_min.y = std::min(t[0].y, std::min(t[1].y, t[2].y));
 
-        Point2D p;
+        Vector3f p;
         Vector3f a;
         for(p.x = bounding_box_min.x; p.x < bounding_box_max.x; p.x++) {
             for(p.y = bounding_box_min.y; p.y < bounding_box_max.y; p.y++) {
@@ -96,7 +108,14 @@ namespace DrawingUtils {
                 if(a.x < 0 || a.y < 0 || a.z < 0)
                     continue;
 
-                image.set(p.x, p.y, color);
+                p.z = 0;
+                for(int i = 0; i < 3; i++)
+                    p.z += t[i].z * a[i];
+
+                if(depth_buffer.get<double>((int)p.x, (int)p.y) < p.z) {
+                    depth_buffer.set<double>((int)p.x, (int)p.y, p.z);
+                    image.set(p.x, p.y, color);
+                }
             }
         }
     }
