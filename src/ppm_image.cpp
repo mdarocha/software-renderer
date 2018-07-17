@@ -17,10 +17,10 @@ bool PPMImage::write_to_file(const char *filename) const {
 }
 
 bool PPMImage::set(int x, int y, const PPMColor &color) {
-    return ImageBuffer::set<PPMColor>(x, y, &color);
+    return ImageBuffer::set<PPMColor>(x, y, color);
 }
 
-const PPMColor* PPMImage::get(int x, int y) const {
+const PPMColor& PPMImage::get(int x, int y) const {
     return ImageBuffer::get<PPMColor>(x, y);
 }
 

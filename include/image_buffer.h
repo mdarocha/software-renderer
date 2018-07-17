@@ -18,17 +18,17 @@ class ImageBuffer {
         const unsigned char* get_data() const;
 
         template<class T>
-        ImageBuffer(int w, int h) {
-            ImageBuffer(w, h, sizeof(T));
+        static ImageBuffer create(int w, int h) {
+            return ImageBuffer(w, h, sizeof(T));
         }
 
         template<class T>
-        bool set(int x, int y, const T* input_data) {
-            set(x, y, (const unsigned char*) input_data);
+        bool set(int x, int y, const T &input_data) {
+            set(x, y, (const unsigned char*) &input_data);
         }
 
         template<class T>
-        const T* get(int x, int y) const {
-            return (T*) get(x, y);
+        const T& get(int x, int y) const {
+            return (T&) *get(x, y);
         }
 };

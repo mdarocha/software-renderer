@@ -13,7 +13,7 @@ class PPMImage : public ImageBuffer {
         PPMImage(int w, int h);
         bool write_to_file(const char *filename) const;
         bool set(int x, int y, const PPMColor &color);
-        const PPMColor* get(int x, int y) const;
+        const PPMColor& get(int x, int y) const;
 
         friend std::ostream& operator <<(std::ostream &output, const PPMImage &object);
 };
