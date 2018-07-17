@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cassert>
+#include <iostream>
 
 template <class T, size_t dim>
 class MathVector {
@@ -22,6 +23,8 @@ class MathVector {
             assert(i < dim);
             return data[i];
         }
+
+        size_t get_dim();
 };
 
 template <class T, size_t dim> T operator *(const MathVector<T, dim> &left, const MathVector<T, dim> &right) {
@@ -60,6 +63,10 @@ class MathVector<T, 2> {
             assert(i < 2);
             return i == 0 ? x : y;
         }
+
+        size_t get_dim() {
+            return 2;
+        }
 };
 
 template <class T>
@@ -68,9 +75,11 @@ class MathVector<T, 3> {
         T x, y, z;
 
         MathVector() : x(T()), y(T()), z(T()) {};
-        MathVector(T X, T Y, T Z) : x(X), y(Y), z(Z) {}
+        MathVector(T X, T Y, T Z) : x(X), y(Y), z(Z) {};
 
-        MathVector<T, 3> cross(MathVector<T, 3> v);
+        MathVector<T, 3> cross(MathVector<T, 3> v) {
+            return MathVector<T, 3>(y * v.z - z * v.y, z * v.x - x * v.z,  x * v.y - y * v.x);
+        };
 
         T& operator [](const size_t i) {
             assert(i < 3);
@@ -82,7 +91,8 @@ class MathVector<T, 3> {
                 case 2:
                     return z;
             }
-        }
+        };
+
         const T& operator [](const size_t i) const {
             assert(i < 3);
             switch(i) {
@@ -93,6 +103,10 @@ class MathVector<T, 3> {
                 case 2:
                     return z;
             }
+        };
+
+        size_t get_dim() {
+            return 3;
         }
 };
 
@@ -110,8 +124,6 @@ class Triangle {
         Triangle() : p1(T()), p2(T()), p3(T()) {};
         Triangle(T P1, T P2, T P3) : p1(P1), p2(P2), p3(P3) {};
 
-        Vector3f get_barycentric_coords(T p);
-
         T& operator [](const size_t i) {
             assert(i < 3);
             if(i == 0)
@@ -121,4 +133,23 @@ class Triangle {
             else
                 return p3;
         };
+
+        Vector3f get_barycentric_coords(T p) {
+            size_t dim = p.get_dim();
+            Vector3f* v = new Vector3f[dim];
+
+            for(int i = 0; i < dim; i++) {
+                v[i][0] = p3[i] - p1[i];
+                v[i][1] = p2[i] - p1[i];
+                v[i][2] = p1[i] - p[i];
+            }
+
+            Vector3f u = v[0].cross(v[1]);
+
+            if(std::abs(u[2]) < 1)
+                return Vector3f(-1,1,1);
+
+            delete [] v;
+            return Vector3f(1.0f - (u.x + u.y)/u.z, u.y/u.z, u.x/u.z);
+        }
 };

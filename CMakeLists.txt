@@ -21,7 +21,6 @@ set(SOURCES
     src/drawing_utils.cpp
     src/ppm_image.cpp
     src/obj_model.cpp
-    src/math_utils.cpp
     src/image_buffer.cpp
 )
 
