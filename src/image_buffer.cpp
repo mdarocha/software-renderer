@@ -1,12 +1,13 @@
 #include <iostream>
 #include "image_buffer.h"
 
-ImageBuffer::ImageBuffer(int w, int h, int pixel_size) {
+ImageBuffer::ImageBuffer(int w, int h, size_t pixel_size) {
     data = new unsigned char[w * h * pixel_size];
     std::memset(data, 0, w * h * pixel_size);
 
     width = w;
     height = h;
+    this->pixel_size = pixel_size;
 }
 
 ImageBuffer::~ImageBuffer() {
@@ -33,7 +34,7 @@ bool ImageBuffer::set(int x, int y, const unsigned char* pixel_data) {
         return false;
     }
 
-    std::memcpy(data + (x + y * width) * 3, pixel_data, 3);
+    std::memcpy(data + (x + y * width) * pixel_size, pixel_data, pixel_size);
 
     return true;
 }
