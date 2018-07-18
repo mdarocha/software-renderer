@@ -80,7 +80,7 @@ Matrix<T, m, p> operator *(const Matrix<T, m, p> &left, const Matrix<T, p, n> &r
     Matrix<T, m, p> result;
     for(size_t i = 0; i < m; i++)
         for(size_t j = 0; j < p; j++)
-            result[i][j] = left[i] * right.get_column(i);
+            result[i][j] = left[i] * right.get_column(j);
     return result;
 }
 
