@@ -17,6 +17,7 @@ set(INCLUDES
     include/image_buffer.h
     include/matrix.h
     include/triangle.h
+    include/camera.h
 )
 set(SOURCES
     src/main.cpp
@@ -24,6 +25,7 @@ set(SOURCES
     src/ppm_image.cpp
     src/obj_model.cpp
     src/image_buffer.cpp
+    src/camera.cpp
 )
 
 add_executable(softrender ${SOURCES} ${INCLUDES})

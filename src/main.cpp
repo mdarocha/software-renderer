@@ -3,7 +3,7 @@
 #include "ppm_image.h"
 #include "obj_model.h"
 #include "drawing_utils.h"
-#include "matrix.h"
+#include "camera.h"
 
 int main(int argc, char *argv[]) {
     char *model_filename;
@@ -31,8 +31,12 @@ int main(int argc, char *argv[]) {
     OBJModel model(model_filename);
     model.normalize_model_scale();
 
+    Camera camera(width, height, Vector3f(1,1,3), 1.0f);
+    camera.lookat(Vector3f(0,0,0));
+
+    std::cout << camera.get_model() << std::endl << camera.get_viewport();
     std::cout << "Rendering image from model " << model_filename << " with resolution " << width << "x" << height << std::endl;
-    DrawingUtils::rasterize(model, image);
+    DrawingUtils::rasterize(model, image, camera);
 
     image.write_to_file(output_filename);
     return 0;

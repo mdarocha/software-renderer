@@ -1,0 +1,22 @@
+#pragma once
+#include "matrix.h"
+#include "math_vector.h"
+
+class Camera {
+    private:
+        int screen_w, screen_h;
+        Mat4x4f viewport;
+        Mat4x4f model;
+        Mat4x4f projection;
+        double c;
+        void setup_mat();
+    public:
+        Vector3f position;
+
+        Camera(int w, int h, double cam_dist) : screen_w(w), screen_h(h), c(cam_dist), position() {setup_mat();};
+        Camera(int w, int h, Vector3f pos, double cam_dist) : screen_w(w), screen_h(h), position(pos), c(cam_dist) {setup_mat();};
+        const Mat4x4f get_viewport() const;
+        const Mat4x4f get_model() const;
+        const Mat4x4f get_projection() const;
+        void lookat(Vector3f point);
+};

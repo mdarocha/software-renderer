@@ -1,7 +1,7 @@
 #include "drawing_utils.h"
 
 namespace DrawingUtils {
-    void rasterize(OBJModel &model, PPMImage &image) {
+    void rasterize(OBJModel &model, PPMImage &image, Camera &camera) {
         int nfaces = model.get_face_count();
 
         ImageBuffer depth_buffer = ImageBuffer::create<double>(image.get_width(), image.get_height());
@@ -10,18 +10,11 @@ namespace DrawingUtils {
         double intensity;
 
         Triangle4D v;
-        Triangle3D v2;
-
         Triangle3D n;
-
-        double camera_distance = 10.0f;
-
-        Mat4x4f projection;
-        projection.identity();
-        projection[3][2] = -1.0f / camera_distance;
 
         for(int i = 0; i < nfaces; i++) {
             v = model.get_face_vertices(i);
+
             n = model.get_face_normals(i);
 
             intensity = 0;
@@ -33,8 +26,9 @@ namespace DrawingUtils {
             if(intensity > 0) {
                 if(intensity > 1)
                     intensity = 1;
-                v2 = (projection * v);
-                shaded_triangle(v2, PPMColor{(unsigned char)(intensity*255),(unsigned char)(intensity*255),(unsigned char)(intensity*255)}, image, depth_buffer);
+                v = camera.get_projection() * (camera.get_model() * v);
+
+                shaded_triangle(v, PPMColor{(unsigned char)(intensity*255),(unsigned char)(intensity*255),(unsigned char)(intensity*255)}, image, depth_buffer, camera);
             }
         }
 
@@ -90,14 +84,9 @@ namespace DrawingUtils {
         line(t[2], t[0], color, image);
     }
 
-    void shaded_triangle(Triangle3D &triangle, PPMColor color, PPMImage &image, ImageBuffer &depth_buffer) {
-        Triangle3D triangle_screen;
-
-        for(int i = 0; i < 3; i++) {
-            triangle_screen[i].x = (int)((triangle[i].x + 1.0f) * image.get_width() / 2.0f + 0.5f);
-            triangle_screen[i].y = (int)((triangle[i].y + 1.0f) * image.get_height() / 2.0f + 0.5f);
-            triangle_screen[i].z = triangle[i].z + 1.0f;
-        }
+    void shaded_triangle(Triangle4D &triangle, PPMColor color, PPMImage &image, ImageBuffer &depth_buffer, Camera &camera) {
+        Triangle4D triangle_viewport = camera.get_viewport() * triangle;
+        Triangle3D triangle_screen = triangle_viewport;
 
         Vector3f p;
         Vector3f a;
