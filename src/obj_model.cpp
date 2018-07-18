@@ -24,10 +24,10 @@ int OBJModel::get_face_count() {
     return faces.size();
 }
 
-Triangle<Vector3f> OBJModel::get_face_vertices(int n) {
+Triangle3D OBJModel::get_face_vertices(int n) {
     assert((size_t)n < faces.size());
 
-    Triangle<Vector3f> v;
+    Triangle3D v;
 
     for(int i = 0; i < 3; i++) {
         if((size_t)faces[n].vertex[i] > vertices.size()) {
@@ -40,10 +40,10 @@ Triangle<Vector3f> OBJModel::get_face_vertices(int n) {
     return v;
 }
 
-Triangle<Vector3f> OBJModel::get_face_normals(int n) {
+Triangle3D OBJModel::get_face_normals(int n) {
     assert((size_t)n < faces.size());
 
-    Triangle<Vector3f> v;
+    Triangle3D v;
 
     for(int i = 0; i < 3; i++) {
         if((size_t)faces[n].normal[i] > normals.size()) {

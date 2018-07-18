@@ -9,8 +9,8 @@ namespace DrawingUtils {
         Vector3f light_direction(0,0,1);
         double intensity;
 
-        Triangle<Vector3f> v;
-        Triangle<Vector3f> n;
+        Triangle3D v;
+        Triangle3D n;
 
         for(int i = 0; i < nfaces; i++) {
             v = model.get_face_vertices(i);
@@ -75,34 +75,34 @@ namespace DrawingUtils {
         }
     }
 
-    void triangle(Triangle<Point2D> t, PPMColor color, PPMImage &image) {
+    void triangle(Triangle2Di t, PPMColor color, PPMImage &image) {
         line(t[0], t[1], color, image);
         line(t[1], t[2], color, image);
         line(t[2], t[0], color, image);
     }
 
-    void shaded_triangle(Triangle<Vector3f> &triangle, PPMColor color, PPMImage &image, ImageBuffer &depth_buffer) {
-        Triangle<Vector3f> t;
+    void shaded_triangle(Triangle3D &triangle, PPMColor color, PPMImage &image, ImageBuffer &depth_buffer) {
+        Triangle3D triangle_screen;
 
         for(int i = 0; i < 3; i++) {
-            t[i].x = (int)((triangle[i].x + 1.0f) * image.get_width() / 2.0f + 0.5f);
-            t[i].y = (int)((triangle[i].y + 1.0f) * image.get_height() / 2.0f + 0.5f);
-            t[i].z = triangle[i].z + 1.0f;
+            triangle_screen[i].x = (int)((triangle[i].x + 1.0f) * image.get_width() / 2.0f + 0.5f);
+            triangle_screen[i].y = (int)((triangle[i].y + 1.0f) * image.get_height() / 2.0f + 0.5f);
+            triangle_screen[i].z = triangle[i].z + 1.0f;
         }
 
         Vector3f p;
         Vector3f a;
-        Rect<Vector3f> bounding_box = t.get_bounding_box();
+        Rect<Vector3f> bounding_box = triangle_screen.get_bounding_box();
         for(p.x = bounding_box.b.x; p.x < bounding_box.a.x; p.x++) {
             for(p.y = bounding_box.b.y; p.y < bounding_box.a.y; p.y++) {
-                a = t.get_barycentric_coords(p);
+                a = triangle_screen.get_barycentric_coords(p);
 
                 if(a.x < 0 || a.y < 0 || a.z < 0)
                     continue;
 
                 p.z = 0;
                 for(int i = 0; i < 3; i++)
-                    p.z += t[i].z * a[i];
+                    p.z += triangle_screen[i].z * a[i];
 
                 if(depth_buffer.get<double>((int)p.x, (int)p.y) < p.z) {
                     depth_buffer.set<double>((int)p.x, (int)p.y, p.z);
