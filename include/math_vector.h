@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cassert>
 #include <iostream>
+#include <cmath>
 
 template <class T, size_t dim>
 class MathVector {
@@ -27,6 +28,12 @@ class MathVector {
         size_t get_dim();
 };
 
+template <class T, size_t dim> MathVector<T, dim> operator *(const MathVector<T, dim> &left, const T &right) {
+    MathVector<T, dim> result;
+    for(size_t i = 0; i < dim; i++)
+        result[i] = left[i] * right;
+    return result;
+}
 template <class T, size_t dim> T operator *(const MathVector<T, dim> &left, const MathVector<T, dim> &right) {
     T sum = T();
     for(size_t i = 0; i < dim; i++)
@@ -87,6 +94,15 @@ class MathVector<T, 3> {
         MathVector<T, 3> cross(MathVector<T, 3> v) {
             return MathVector<T, 3>(y * v.z - z * v.y, z * v.x - x * v.z,  x * v.y - y * v.x);
         };
+
+        T lenght() {
+            return std::sqrt(x*y*z);
+        }
+
+        MathVector<T,3>& normalize() {
+            *this = *this * (1.0/this->lenght());
+            return *this;
+        }
 
         operator MathVector<T, 4>() {
             return MathVector<T,4>(x, y, z);
