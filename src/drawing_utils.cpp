@@ -9,8 +9,16 @@ namespace DrawingUtils {
         Vector3f light_direction(0,0,1);
         double intensity;
 
-        Triangle3D v;
+        Triangle4D v;
+        Triangle3D v2;
+
         Triangle3D n;
+
+        double camera_distance = 10.0f;
+
+        Mat4x4f projection;
+        projection.identity();
+        projection[3][2] = -1.0f / camera_distance;
 
         for(int i = 0; i < nfaces; i++) {
             v = model.get_face_vertices(i);
@@ -25,7 +33,8 @@ namespace DrawingUtils {
             if(intensity > 0) {
                 if(intensity > 1)
                     intensity = 1;
-                shaded_triangle(v, PPMColor{(unsigned char)(intensity*255),(unsigned char)(intensity*255),(unsigned char)(intensity*255)}, image, depth_buffer);
+                v2 = (projection * v);
+                shaded_triangle(v2, PPMColor{(unsigned char)(intensity*255),(unsigned char)(intensity*255),(unsigned char)(intensity*255)}, image, depth_buffer);
             }
         }
 

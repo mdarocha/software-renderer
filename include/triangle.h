@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cassert>
 #include "math_vector.h"
+#include "matrix.h"
 
 template<class T>
 struct Rect {
@@ -38,6 +39,16 @@ class Triangle {
                 return p3;
         };
 
+        const MathVector<T,dim>& operator [](const size_t i) const {
+            assert(i < 3);
+            if(i == 0)
+                return p1;
+            else if(i == 1)
+                return p2;
+            else
+                return p3;
+        };
+
         MathVector<T,3> get_barycentric_coords(MathVector<T, 3> p) {
             MathVector<T,3> v[3];
 
@@ -59,7 +70,23 @@ class Triangle {
             calculate_bounding_box();
             return bounding_box;
         }
+
+        operator Triangle<T,4>() {
+            return Triangle<T,4>(p1, p2, p3);
+        }
+
+        operator Triangle<T,3>() {
+            return Triangle<T,3>(p1, p2, p3);
+        }
 };
+
+template <class T, size_t rows, size_t columns>
+Triangle<T, rows> operator *(const Matrix<T, rows, columns> &left, const Triangle<T, columns> &right) {
+    Triangle<T, rows> result;
+    for(size_t i = 0; i < 3; i++)
+        result[i] = left * right[i];
+    return result;
+}
 
 typedef Triangle<double, 4> Triangle4D;
 typedef Triangle<double, 3> Triangle3D;
