@@ -28,7 +28,7 @@ class MathVector {
         size_t get_dim();
 };
 
-template <class T, size_t dim> MathVector<T, dim> operator *(const MathVector<T, dim> &left, const T &right) {
+template <class T, size_t dim, class U> MathVector<T, dim> operator *(const MathVector<T, dim> &left, const U &right) {
     MathVector<T, dim> result;
     for(size_t i = 0; i < dim; i++)
         result[i] = left[i] * right;
@@ -95,12 +95,13 @@ class MathVector<T, 3> {
             return MathVector<T, 3>(y * v.z - z * v.y, z * v.x - x * v.z,  x * v.y - y * v.x);
         };
 
-        T lenght() {
-            return std::sqrt(x*y*z);
+        double length() {
+            return std::sqrt(x*x + y*y + z*z);
         }
 
         MathVector<T,3>& normalize() {
-            *this = *this * (1.0/this->lenght());
+            if(this->length() != 0)
+                *this = *this * (1.0f/this->length());
             return *this;
         }
 
