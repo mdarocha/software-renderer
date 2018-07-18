@@ -88,6 +88,13 @@ Triangle<T, rows> operator *(const Matrix<T, rows, columns> &left, const Triangl
     return result;
 }
 
+template <class T, size_t dim>
+std::ostream& operator <<(std::ostream& out, Triangle<T, dim> t) {
+    out << "p1 " << t.p1;
+    out << "p2 " << t.p2;
+    out << "p3 " << t.p3;
+    return out;
+}
 typedef Triangle<double, 4> Triangle4D;
 typedef Triangle<double, 3> Triangle3D;
 typedef Triangle<double, 2> Triangle2D;
