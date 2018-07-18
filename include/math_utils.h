@@ -117,7 +117,25 @@ typedef MathVector<int, 3> Point3D;
 typedef MathVector<double, 3> Vector3f;
 
 template<class T>
+struct Rect {
+    T a;
+    T b;
+};
+
+template<class T>
 class Triangle {
+    private:
+        Rect<T> bounding_box;
+
+        void calculate_bounding_box() {
+            size_t dim = p1.get_dim();
+            for(size_t i = 0; i < dim; i++) {
+                bounding_box.a[i] = std::max(p1[i], std::max(p2[i], p3[i]));
+                bounding_box.b[i] = std::min(p1[i], std::min(p2[i], p3[i]));
+            }
+
+        };
+
     public:
         T p1, p2, p3;
 
@@ -138,7 +156,7 @@ class Triangle {
             size_t dim = p.get_dim();
             Vector3f* v = new Vector3f[dim];
 
-            for(int i = 0; i < dim; i++) {
+            for(size_t i = 0; i < dim; i++) {
                 v[i][0] = p3[i] - p1[i];
                 v[i][1] = p2[i] - p1[i];
                 v[i][2] = p1[i] - p[i];
@@ -151,5 +169,10 @@ class Triangle {
 
             delete [] v;
             return Vector3f(1.0f - (u.x + u.y)/u.z, u.y/u.z, u.x/u.z);
+        }
+
+        const Rect<T> get_bounding_box() {
+            calculate_bounding_box();
+            return bounding_box;
         }
 };

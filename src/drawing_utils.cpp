@@ -32,7 +32,7 @@ namespace DrawingUtils {
         /*double depth;
         for(int x = 0; x < image.get_width(); x++) {
             for(int y = 0; y < image.get_height(); y++) {
-                depth = depth_buffer.get<double>(x, y);
+                depth = depth_buffer.get<double>(x, y) / 2;
                 image.set(x, y, PPMColor{(unsigned char)(depth*255),(unsigned char)(depth*255),(unsigned char)(depth*255)});
             }
         }*/
@@ -90,19 +90,11 @@ namespace DrawingUtils {
             t[i].z = triangle[i].z + 1.0f;
         }
 
-        Vector2f bounding_box_min;
-        Vector2f bounding_box_max;
-
-        bounding_box_max.x = std::max(t[0].x, std::max(t[1].x, t[2].x));
-        bounding_box_max.y = std::max(t[0].y, std::max(t[1].y, t[2].y));
-
-        bounding_box_min.x = std::min(t[0].x, std::min(t[1].x, t[2].x));
-        bounding_box_min.y = std::min(t[0].y, std::min(t[1].y, t[2].y));
-
         Vector3f p;
         Vector3f a;
-        for(p.x = bounding_box_min.x; p.x < bounding_box_max.x; p.x++) {
-            for(p.y = bounding_box_min.y; p.y < bounding_box_max.y; p.y++) {
+        Rect<Vector3f> bounding_box = t.get_bounding_box();
+        for(p.x = bounding_box.b.x; p.x < bounding_box.a.x; p.x++) {
+            for(p.y = bounding_box.b.y; p.y < bounding_box.a.y; p.y++) {
                 a = t.get_barycentric_coords(p);
 
                 if(a.x < 0 || a.y < 0 || a.z < 0)
