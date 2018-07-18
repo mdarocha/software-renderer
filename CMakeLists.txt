@@ -15,6 +15,7 @@ set(INCLUDES
     include/math_utils.h
     include/obj_model.h
     include/image_buffer.h
+    include/matrix.h
 )
 set(SOURCES
     src/main.cpp
