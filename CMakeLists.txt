@@ -12,10 +12,11 @@ include_directories(include/)
 set(INCLUDES
     include/ppm_image.h
     include/drawing_utils.h
-    include/math_utils.h
+    include/math_vector.h
     include/obj_model.h
     include/image_buffer.h
     include/matrix.h
+    include/triangle.h
 )
 set(SOURCES
     src/main.cpp

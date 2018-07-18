@@ -2,7 +2,9 @@
 
 #include "ppm_image.h"
 #include "image_buffer.h"
-#include "math_utils.h"
+#include "math_vector.h"
+#include "triangle.h"
+#include "matrix.h"
 #include "obj_model.h"
 
 namespace DrawingUtils {

@@ -3,6 +3,7 @@
 #include "ppm_image.h"
 #include "obj_model.h"
 #include "drawing_utils.h"
+#include "matrix.h"
 
 int main(int argc, char *argv[]) {
     char *model_filename;
@@ -34,6 +35,5 @@ int main(int argc, char *argv[]) {
     DrawingUtils::rasterize(model, image);
 
     image.write_to_file(output_filename);
-
     return 0;
 }

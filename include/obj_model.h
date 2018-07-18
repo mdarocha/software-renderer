@@ -3,7 +3,8 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include "math_utils.h"
+#include "math_vector.h"
+#include "triangle.h"
 
 class OBJModel {
     private:
