@@ -24,7 +24,7 @@ class ImageBuffer {
 
         template<class T>
         bool set(int x, int y, const T &input_data) {
-            set(x, y, (const unsigned char*) &input_data);
+            return set(x, y, (const unsigned char*) &input_data);
         }
 
         template<class T>

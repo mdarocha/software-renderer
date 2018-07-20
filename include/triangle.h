@@ -78,6 +78,11 @@ class Triangle {
         operator Triangle<T,3>() {
             return Triangle<T,3>(p1, p2, p3);
         }
+
+        Triangle<T,3>& round_down() {
+            *this = Triangle<T,3>(p1.round_down(), p2.round_down(), p3.round_down());
+            return *this;
+        }
 };
 
 template <class T, size_t rows, size_t columns>

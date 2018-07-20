@@ -24,8 +24,6 @@ class MathVector {
             assert(i < dim);
             return data[i];
         }
-
-        size_t get_dim();
 };
 
 template <class T, size_t dim, class U> MathVector<T, dim> operator *(const MathVector<T, dim> &left, const U &right) {
@@ -77,10 +75,6 @@ class MathVector<T, 2> {
             assert(i < 2);
             return i == 0 ? x : y;
         }
-
-        size_t get_dim() {
-            return 2;
-        }
 };
 
 template <class T>
@@ -102,6 +96,11 @@ class MathVector<T, 3> {
         MathVector<T,3>& normalize() {
             if(this->length() != 0)
                 *this = *this * (1.0f/this->length());
+            return *this;
+        }
+
+        MathVector<T,3>& round_down() {
+            *this = MathVector<T,3>(std::floor(x), std::floor(y), std::floor(z));
             return *this;
         }
 
@@ -132,10 +131,6 @@ class MathVector<T, 3> {
                     return z;
             }
         };
-
-        size_t get_dim() {
-            return 3;
-        }
 };
 
 template<class T>
@@ -178,10 +173,6 @@ class MathVector<T, 4> {
                     return w;
             }
         };
-
-        size_t get_dim() {
-            return 4;
-        }
 };
 
 typedef MathVector<int, 2> Point2D;

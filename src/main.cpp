@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
     OBJModel model(model_filename);
     model.normalize_model_scale();
 
-    Camera camera(width, height, Vector3f(1,1,3), 1.0f);
+    Camera camera(width, height, Vector3f(0.5f,2,3), 1.0f);
     camera.lookat(Vector3f(0,0,0));
 
     std::cout << camera.get_model() << std::endl << camera.get_viewport();

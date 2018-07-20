@@ -87,12 +87,16 @@ namespace DrawingUtils {
     void shaded_triangle(Triangle4D &triangle, PPMColor color, PPMImage &image, ImageBuffer &depth_buffer, Camera &camera) {
         Triangle4D triangle_viewport = camera.get_viewport() * triangle;
         Triangle3D triangle_screen = triangle_viewport;
+        triangle_screen.round_down();
 
         Vector3f p;
         Vector3f a;
         Rect<Vector3f> bounding_box = triangle_screen.get_bounding_box();
         for(p.x = bounding_box.b.x; p.x < bounding_box.a.x; p.x++) {
             for(p.y = bounding_box.b.y; p.y < bounding_box.a.y; p.y++) {
+                if(p.x < 0 || p.y < 0 || p.x > image.get_width() || p.y > image.get_height())
+                    continue;
+
                 a = triangle_screen.get_barycentric_coords(p);
 
                 if(a.x < 0 || a.y < 0 || a.z < 0)
