@@ -4,8 +4,6 @@ namespace DrawingUtils {
     void rasterize(OBJModel &model, PPMImage &image, Camera &camera, Shader &shader) {
         int nfaces = model.get_face_count();
 
-        ImageBuffer depth_buffer = ImageBuffer::create<double>(image.get_width(), image.get_height());
-
         Triangle4D v;
         Triangle3D n;
         Triangle2D uv;
@@ -15,12 +13,13 @@ namespace DrawingUtils {
         for(int i = 0; i < nfaces; i++) {
             v = model.get_face_vertices(i);
             n = model.get_face_normals(i);
+            uv = model.get_face_uv(i);
 
             for(int i = 0; i < 3; i++) {
                v[i] = shader.vertex(v[i], n[i], uv[i], i);
             }
 
-            shaded_triangle(v, color, image, depth_buffer, camera, shader);
+            shaded_triangle(v, color, image, camera, shader);
 
         }
 
@@ -76,7 +75,7 @@ namespace DrawingUtils {
         line(t[2], t[0], color, image);
     }
 
-    void shaded_triangle(Triangle4D &triangle, PPMColor c, PPMImage &image, ImageBuffer &depth_buffer, Camera &camera, Shader &shader) {
+    void shaded_triangle(Triangle4D &triangle, PPMColor c, PPMImage &image, Camera &camera, Shader &shader) {
         Triangle3D triangle_screen = triangle;
         triangle_screen.round_down();
 
@@ -99,8 +98,8 @@ namespace DrawingUtils {
                 for(int i = 0; i < 3; i++)
                     p.z += triangle_screen[i].z * a[i];
 
-                if(depth_buffer.get<double>((int)p.x, (int)p.y) < p.z) {
-                    depth_buffer.set<double>((int)p.x, (int)p.y, p.z);
+                if(camera.zbuffer.get<unsigned char>((int)p.x, (int)p.y) < p.z) {
+                    camera.zbuffer.set<unsigned char>((int)p.x, (int)p.y, p.z);
 
                     color = c;
                     shader.fragment(color, a);

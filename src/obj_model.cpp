@@ -56,7 +56,17 @@ Triangle3D OBJModel::get_face_normals(int n) {
     return v;
 }
 
+Triangle2D OBJModel::get_face_uv(int n) {
+    assert((size_t)n < faces.size());
+    Triangle2D v;
 
+    for(int i = 0; i < 3; i++) {
+        if((size_t)faces[n].uv[i] > uv.size()) {
+            std::cerr << "Warning: bad uv indice in face: " << n << std::endl;
+        }
+        v[i] = uv[faces[n].uv[i]];
+    }
+}
 void OBJModel::compute_bounding_box() {
     Vector3f vmax, vmin;
     vmax.x = vmax.y = vmax.z = std::numeric_limits<float>::min();

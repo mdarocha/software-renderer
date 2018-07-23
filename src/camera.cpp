@@ -3,7 +3,7 @@
 void Camera::setup_mat() {
     model.identity();
 
-    double depth = 200.0f;
+    double depth = 255;
     viewport.identity();
 
     viewport[0][3] = screen_w / 2.0f;
