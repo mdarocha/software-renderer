@@ -1,35 +1,27 @@
 #include "drawing_utils.h"
 
 namespace DrawingUtils {
-    void rasterize(OBJModel &model, PPMImage &image, Camera &camera) {
+    void rasterize(OBJModel &model, PPMImage &image, Camera &camera, Shader &shader) {
         int nfaces = model.get_face_count();
 
         ImageBuffer depth_buffer = ImageBuffer::create<double>(image.get_width(), image.get_height());
 
-        Vector3f light_direction(0,0,1);
-        double intensity;
-
         Triangle4D v;
         Triangle3D n;
+        Triangle2D uv;
+
+        PPMColor color{255,255,255};
 
         for(int i = 0; i < nfaces; i++) {
             v = model.get_face_vertices(i);
-
             n = model.get_face_normals(i);
 
-            intensity = 0;
-            for(int k = 0; k < 3; k++) {
-                intensity += n[k] * light_direction;
+            for(int i = 0; i < 3; i++) {
+               v[i] = shader.vertex(v[i], n[i], uv[i], i);
             }
-            intensity /= 3;
 
-            if(intensity > 0) {
-                if(intensity > 1)
-                    intensity = 1;
-                v = camera.get_projection() * (camera.get_model() * v);
+            shaded_triangle(v, color, image, depth_buffer, camera, shader);
 
-                shaded_triangle(v, PPMColor{(unsigned char)(intensity*255),(unsigned char)(intensity*255),(unsigned char)(intensity*255)}, image, depth_buffer, camera);
-            }
         }
 
         /*double depth;
@@ -84,14 +76,15 @@ namespace DrawingUtils {
         line(t[2], t[0], color, image);
     }
 
-    void shaded_triangle(Triangle4D &triangle, PPMColor color, PPMImage &image, ImageBuffer &depth_buffer, Camera &camera) {
-        Triangle4D triangle_viewport = camera.get_viewport() * triangle;
-        Triangle3D triangle_screen = triangle_viewport;
+    void shaded_triangle(Triangle4D &triangle, PPMColor c, PPMImage &image, ImageBuffer &depth_buffer, Camera &camera, Shader &shader) {
+        Triangle3D triangle_screen = triangle;
         triangle_screen.round_down();
 
         Vector3f p;
         Vector3f a;
         Rect<Vector3f> bounding_box = triangle_screen.get_bounding_box();
+
+        PPMColor color = c;
         for(p.x = bounding_box.b.x; p.x < bounding_box.a.x; p.x++) {
             for(p.y = bounding_box.b.y; p.y < bounding_box.a.y; p.y++) {
                 if(p.x < 0 || p.y < 0 || p.x > image.get_width() || p.y > image.get_height())
@@ -108,6 +101,10 @@ namespace DrawingUtils {
 
                 if(depth_buffer.get<double>((int)p.x, (int)p.y) < p.z) {
                     depth_buffer.set<double>((int)p.x, (int)p.y, p.z);
+
+                    color = c;
+                    shader.fragment(color, a);
+
                     image.set(p.x, p.y, color);
                 }
             }

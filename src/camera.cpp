@@ -46,6 +46,6 @@ void Camera::lookat(Vector3f p) {
         m[2][i] = z[i];
         t[i][3] = -p[i];
     }
-    std::cout << m << std::endl << t << std::endl;
+
     model = m * t;
 }
