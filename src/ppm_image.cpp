@@ -3,7 +3,26 @@
 #include <cstring>
 #include "ppm_image.h"
 
-PPMImage::PPMImage(int w, int h) : ImageBuffer(w, h, 3) {};
+PPMImage::PPMImage(const char *filename) : ImageBuffer() {
+    std::ifstream file;
+    file.open(filename, std::ios::binary);
+
+    std::string tag;
+
+    int depth;
+    file >> tag;
+    if(tag == "P6") {
+        file >> width >> height;
+        file >> depth;
+        pixel_size = 3;
+        data = new unsigned char[width * height * pixel_size];
+        file.read((char*)data, width * height * pixel_size);
+    } else {
+        std::cerr << "Invalid file type: " << filename << std::endl;
+    }
+
+    file.close();
+}
 
 bool PPMImage::write_to_file(const char *filename) const {
     std::ofstream file;

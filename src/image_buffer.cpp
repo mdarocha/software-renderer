@@ -1,6 +1,12 @@
 #include <iostream>
 #include "image_buffer.h"
 
+ImageBuffer::ImageBuffer() {
+    data = nullptr;
+    width = 0;
+    height = 0;
+    pixel_size = 0;
+}
 ImageBuffer::ImageBuffer(int w, int h, size_t pixel_size) {
     data = new unsigned char[w * h * pixel_size];
     std::memset(data, 0, w * h * pixel_size);

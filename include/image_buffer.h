@@ -9,6 +9,7 @@ class ImageBuffer {
         size_t pixel_size;
 
     public:
+        ImageBuffer();
         ImageBuffer(int w, int h, size_t pixel_size);
         ~ImageBuffer();
         bool set(int x, int y, const unsigned char* data);
