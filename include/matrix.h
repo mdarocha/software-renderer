@@ -32,10 +32,10 @@ class Matrix {
             return result;
         }
 
-        void set_column(const size_t i, const MathVector<T, columns> &input) const {
+        void set_column(const size_t i, const MathVector<T, rows> &input) {
             assert(i < columns);
             for(int j = 0; j < rows; j++)
-                data[j][i] = input[i];
+                data[j][i] = input[j];
         }
 
         void identity() {
