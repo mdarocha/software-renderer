@@ -26,9 +26,7 @@ struct GouraudShader : public Shader {
 
     virtual bool fragment(PPMColor &color, Vector3f bary) {
         double i = bary * intensity;
-        color.r *= i;
-        color.g *= i;
-        color.b *= i;
+        color = color * i;
         return true;
     }
 
