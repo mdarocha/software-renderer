@@ -26,6 +26,12 @@ class MathVector {
         }
 };
 
+template <class T, size_t dim> bool operator ==(const MathVector<T, dim> &left, const MathVector<T, dim> &right) {
+    for(size_t i = 0; i < dim; i++)
+        if(left[i] != right[i])
+            return false;
+    return true;
+}
 template <class T, size_t dim, class U> MathVector<T, dim> operator *(const MathVector<T, dim> &left, const U &right) {
     MathVector<T, dim> result;
     for(size_t i = 0; i < dim; i++)
