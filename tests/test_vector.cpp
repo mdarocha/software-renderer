@@ -9,7 +9,7 @@ TEST_CASE("math operations on vectors work", "[math_vector]") {
 
     SECTION("equal comparision") {
         a = b;
-        REQUIRE(a == b);
+        REQUIRE((a == b));
     }
 
     SECTION("addition") {
