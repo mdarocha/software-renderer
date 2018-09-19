@@ -51,6 +51,14 @@ class Matrix {
 };
 
 template <class T, size_t rows, size_t columns>
+bool operator ==(const Matrix<T, rows, columns> &left, const Matrix<T, rows, columns> &right) {
+    for(size_t i = 0; i < rows; i++)
+        if(left[i] != right[i])
+            return false;
+    return true;
+}
+
+template <class T, size_t rows, size_t columns>
 Matrix<T, rows, columns> operator +(const Matrix<T, rows, columns> &left, const Matrix<T, rows, columns> &right) {
     Matrix<T, rows, columns> result;
     for(size_t i = 0; i < rows; i++)
@@ -64,7 +72,16 @@ Matrix<T, rows, columns> operator -(const Matrix<T, rows, columns> &left, const 
     for(size_t i = 0; i < rows; i++)
         result[i] = left[i] - right[i];
     return result;
+
 };
+
+template <class T, size_t rows, size_t columns, class U>
+Matrix<T, rows, columns> operator *(const Matrix<T, rows, columns> &left, const U &right) {
+    Matrix<T, rows, columns> result;
+    for(size_t i = 0; i < rows; i++)
+        result[i] = left[i] * right;
+    return result;
+}
 
 template <class T, size_t rows, size_t columns>
 MathVector<T, rows> operator *(const Matrix<T, rows, columns> &left, const MathVector<T, columns> &right) {
@@ -91,4 +108,5 @@ std::ostream& operator <<(std::ostream &out, Matrix<T, rows, columns> m) {
     return out;
 }
 
+typedef Matrix<double, 3, 3> Mat3x3f;
 typedef Matrix<double, 4, 4> Mat4x4f;

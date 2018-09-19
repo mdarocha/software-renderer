@@ -32,6 +32,11 @@ template <class T, size_t dim> bool operator ==(const MathVector<T, dim> &left, 
             return false;
     return true;
 }
+
+template <class T, size_t dim> bool operator !=(const MathVector<T, dim> &left, const MathVector<T, dim> &right) {
+    return !(left == right);
+}
+
 template <class T, size_t dim, class U> MathVector<T, dim> operator *(const MathVector<T, dim> &left, const U &right) {
     MathVector<T, dim> result;
     for(size_t i = 0; i < dim; i++)
