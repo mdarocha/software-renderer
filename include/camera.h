@@ -13,10 +13,10 @@ class Camera {
         void setup_mat();
     public:
         Vector3f position;
-        ImageBuffer zbuffer;
+        ImageBuffer<unsigned char> zbuffer;
 
-        Camera(int w, int h, double cam_dist) : screen_w(w), screen_h(h), c(cam_dist), position(), zbuffer(w, h, 1) {setup_mat();};
-        Camera(int w, int h, Vector3f pos, double cam_dist) : screen_w(w), screen_h(h), c(cam_dist), position(pos), zbuffer(w, h, 1) {setup_mat();};
+        Camera(int w, int h, double cam_dist) : screen_w(w), screen_h(h), c(cam_dist), position(), zbuffer(w, h) {setup_mat();};
+        Camera(int w, int h, Vector3f pos, double cam_dist) : screen_w(w), screen_h(h), c(cam_dist), position(pos), zbuffer(w, h) {setup_mat();};
         const Mat4x4f get_viewport() const;
         const Mat4x4f get_model() const;
         const Mat4x4f get_projection() const;

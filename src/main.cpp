@@ -24,7 +24,7 @@ struct GouraudShader : public Shader {
         return viewport * projection * model * vertex;
     }
 
-    virtual bool fragment(PPMColor &color, Vector3f bary) {
+    virtual bool fragment(DrawingColor &color, Vector3f bary) {
         double i = bary * intensity;
         color = color * i;
         return true;
@@ -68,6 +68,6 @@ int main(int argc, char *argv[]) {
 
     DrawingUtils::rasterize(model, image, camera, shader);
 
-    image.write_to_file(output_filename);
+    image.write_to_file(std::string(output_filename));
     return 0;
 }

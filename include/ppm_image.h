@@ -3,34 +3,23 @@
 #include <fstream>
 #include "image_buffer.h"
 #include "math_vector.h"
-
-struct PPMColor {
-    unsigned char r, g, b;
-};
-
-template<class T>
-PPMColor operator*(const PPMColor &left, const T &right) {
-    PPMColor result;
-    result.r = left.r * right;
-    result.g = left.g * right;
-    result.b = left.b * right;
-    return result;
-}
+#include "drawing_target.h"
 
 //This class allows creation and saving of images in the PPM file format
-class PPMImage : public ImageBuffer {
+class PPMImage : public DrawingTarget {
+    ImageBuffer<DrawingColor> image;
+
     public:
-        PPMImage(int w, int h) : ImageBuffer(w, h, 3) {};
-        PPMImage(const char* filename);
-        bool write_to_file(const char *filename) const;
-        PPMImage& load_from_file(const char *filename);
-        bool set(int x, int y, const PPMColor &color);
-        const PPMColor& get(int x, int y) const;
+        PPMImage(int w, int h) : image(w, h) {};
+        PPMImage(std::string filename);
 
-        template<class T>
-        const PPMColor& get(MathVector<T, 2> v) const {
-            return get((int)v.x, (int)v.y);
-        }
+        virtual ~PPMImage() {};
 
-        friend std::ostream& operator <<(std::ostream &output, const PPMImage &object);
+        virtual int get_height() const { return image.get_height(); };
+        virtual int get_width() const { return image.get_width(); };
+
+        virtual void set(int x, int y, DrawingColor color) { image.set(x, y, color); };
+        virtual DrawingColor get(int x, int y) const { return image.get(x, y); };
+
+        bool write_to_file(std::string filename) const;
 };

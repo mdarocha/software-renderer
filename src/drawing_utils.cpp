@@ -1,14 +1,14 @@
 #include "drawing_utils.h"
 
 namespace DrawingUtils {
-    void rasterize(OBJModel &model, PPMImage &image, Camera &camera, Shader &shader) {
+    void rasterize(OBJModel &model, DrawingTarget &image, Camera &camera, Shader &shader) {
         int nfaces = model.get_face_count();
 
         Triangle4D v;
         Triangle3D n;
         Triangle2D uv;
 
-        PPMColor color{255,255,255};
+        DrawingColor color {255,255,255};
 
         for(int i = 0; i < nfaces; i++) {
             v = model.get_face_vertices(i);
@@ -22,17 +22,9 @@ namespace DrawingUtils {
             shaded_triangle(v, color, image, camera, shader);
 
         }
-
-        /*double depth;
-        for(int x = 0; x < image.get_width(); x++) {
-            for(int y = 0; y < image.get_height(); y++) {
-                depth = depth_buffer.get<double>(x, y) / 2;
-                image.set(x, y, PPMColor{(unsigned char)(depth*255),(unsigned char)(depth*255),(unsigned char)(depth*255)});
-            }
-        }*/
     }
 
-    void line(Point2D start, Point2D end, PPMColor color, PPMImage &image) {
+    void line(Point2D start, Point2D end, DrawingColor color, DrawingTarget &image) {
         bool is_steep = false;
         //if we are drawing a steep line, transpose the image
         if(std::abs(start.x - end.x) < std::abs(start.y - end.y)) {
@@ -69,13 +61,13 @@ namespace DrawingUtils {
         }
     }
 
-    void triangle(Triangle2Di t, PPMColor color, PPMImage &image) {
+    void triangle(Triangle2Di t, DrawingColor color, DrawingTarget &image) {
         line(t[0], t[1], color, image);
         line(t[1], t[2], color, image);
         line(t[2], t[0], color, image);
     }
 
-    void shaded_triangle(Triangle4D &triangle, PPMColor c, PPMImage &image, Camera &camera, Shader &shader) {
+    void shaded_triangle(Triangle4D &triangle, DrawingColor c, DrawingTarget &image, Camera &camera, Shader &shader) {
         Triangle3D triangle_screen = triangle;
         triangle_screen.round_down();
 
@@ -83,7 +75,7 @@ namespace DrawingUtils {
         Vector3f a;
         Rect<Vector3f> bounding_box = triangle_screen.get_bounding_box();
 
-        PPMColor color = c;
+        DrawingColor color = c;
         for(p.x = bounding_box.b.x; p.x < bounding_box.a.x; p.x++) {
             for(p.y = bounding_box.b.y; p.y < bounding_box.a.y; p.y++) {
                 if(p.x < 0 || p.y < 0 || p.x > image.get_width() || p.y > image.get_height())
@@ -98,8 +90,8 @@ namespace DrawingUtils {
                 for(int i = 0; i < 3; i++)
                     p.z += triangle_screen[i].z * a[i];
 
-                if(camera.zbuffer.get<unsigned char>((int)p.x, (int)p.y) < p.z) {
-                    camera.zbuffer.set<unsigned char>((int)p.x, (int)p.y, p.z);
+                if(camera.zbuffer.get((int)p.x, (int)p.y) < p.z) {
+                    camera.zbuffer.set((int)p.x, (int)p.y, p.z);
 
                     color = c;
                     shader.fragment(color, a);

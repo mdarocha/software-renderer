@@ -1,35 +1,29 @@
 #pragma once
+#include <memory>
 
-#include <cstring>
-
+template<class T>
 class ImageBuffer {
     protected:
-        unsigned char* data;
+        std::unique_ptr<T[]> data;
         int width, height;
-        size_t pixel_size;
 
     public:
-        ImageBuffer();
-        ImageBuffer(int w, int h, size_t pixel_size);
-        ~ImageBuffer();
-        bool set(int x, int y, const unsigned char* data);
-        const unsigned char* get(int x, int y) const;
-        int get_width() const;
-        int get_height() const;
-        const unsigned char* get_data() const;
+        ImageBuffer() : data(nullptr), width(), height() {}
 
-        template<class T>
-        static ImageBuffer create(int w, int h) {
-            return ImageBuffer(w, h, sizeof(T));
-        }
+        ImageBuffer(int w, int h) : data(new T[w * h]), width(w), height(h) {}
 
-        template<class T>
-        bool set(int x, int y, const T &input_data) {
-            return set(x, y, (const unsigned char*) &input_data);
-        }
+        ~ImageBuffer() {}
 
-        template<class T>
-        const T& get(int x, int y) const {
-            return (T&) *get(x, y);
-        }
+        void set(int x, int y, T input) {
+            data[x + y * width] = input;
+        };
+
+        T get(int x, int y) const {
+            return data[x + y * width];
+        };
+
+        int get_width() const { return width; }
+        int get_height() const { return height; }
+
+        const std::unique_ptr<T[]>& get_data() const { return data; }
 };
