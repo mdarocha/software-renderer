@@ -31,7 +31,7 @@ const Mat4x4f Camera::get_projection() const {
 }
 
 void Camera::lookat(Vector3f p) {
-    Vector3f up(0,1,0);
+    Vector3f up(0,-1,0);
     Vector3f z = (position - p).normalize();
     Vector3f x = up.cross(z).normalize();
     Vector3f y = z.cross(x).normalize();
