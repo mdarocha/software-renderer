@@ -11,7 +11,6 @@ class PPMImage : public DrawingTarget {
 
     public:
         PPMImage(int w, int h) : image(w, h) {};
-        PPMImage(std::string filename);
 
         virtual ~PPMImage() {};
 
@@ -22,4 +21,5 @@ class PPMImage : public DrawingTarget {
         virtual DrawingColor get(int x, int y) const { return image.get(x, y); };
 
         bool write_to_file(std::string filename) const;
+        static ImageBuffer<DrawingColor> load(std::string filename);
 };

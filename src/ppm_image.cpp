@@ -3,20 +3,21 @@
 #include <cstring>
 #include "ppm_image.h"
 
-PPMImage::PPMImage(std::string filename) {
+ImageBuffer<DrawingColor> PPMImage::load(std::string filename) {
     std::ifstream file;
     file.open(filename.c_str(), std::ios::binary);
 
     std::string tag;
+    int depth, width, height;
 
-    int depth;
     file >> tag;
     if(tag == "P6") {
-    } else {
-        std::cerr << "Invalid file type: " << filename << std::endl;
-    }
+        file >> width >> height >> depth;
+        DrawingColor* data = new DrawingColor[width * height];
+        file.read(reinterpret_cast<char*>(data), width * height * 3);
 
-    file.close();
+        return ImageBuffer<DrawingColor>(width, height, data);
+    }
 }
 
 bool PPMImage::write_to_file(std::string filename) const {
