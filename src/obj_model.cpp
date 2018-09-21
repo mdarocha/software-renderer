@@ -66,6 +66,8 @@ Triangle2D OBJModel::get_face_uv(int n) {
         }
         v[i] = uv[faces[n].uv[i]];
     }
+
+    return v;
 }
 void OBJModel::compute_bounding_box() {
     Vector3f vmax, vmin;
@@ -103,12 +105,14 @@ std::istream& operator >>(std::istream &input, OBJModel &object) {
     std::string token;
 
     while(!input.eof()) {
+
         std::getline(input, line);
         std::istringstream line_s(line);
 
+        token = "";
         line_s >> token;
 
-       if(token == "v") {
+        if(token == "v") {
             Vector3f vec3;
             line_s >> vec3.x >> vec3.y >> vec3.z;
             object.vertices.push_back(vec3);
@@ -122,7 +126,6 @@ std::istream& operator >>(std::istream &input, OBJModel &object) {
             object.normals.push_back(vec3);
         } else if(token == "f") {
             OBJModel::FaceIndices face;
-
             char c;
             int i = 0;
 
