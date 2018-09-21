@@ -5,33 +5,7 @@
 #include "drawing_utils.h"
 #include "camera.h"
 #include "matrix.h"
-
-struct GouraudShader : public Shader {
-    //uniforms
-    Mat4x4f model, viewport, projection;
-    Vector3f light_dir;
-    //varying
-    Vector3f intensity;
-
-    GouraudShader(Mat4x4f m, Mat4x4f v, Mat4x4f p, Vector3f light) : model(m), viewport(v), projection(p), light_dir(light.normalize()) {};
-
-    virtual Vector4f vertex(Vector3f v, Vector3f normal, Vector2f uv, int n) {
-        intensity[n] = normal*light_dir;
-        if(intensity[n] < 0.0f)
-            intensity[n] = 0.0f;
-
-        Vector4f vertex = v;
-        return viewport * projection * model * vertex;
-    }
-
-    virtual bool fragment(DrawingColor &color, Vector3f bary) {
-        double i = bary * intensity;
-        color = color * i;
-        return true;
-    }
-
-    virtual ~GouraudShader() {}
-};
+#include "shader/gouraud.h"
 
 int main(int argc, char *argv[]) {
     char *model_filename;
@@ -59,10 +33,11 @@ int main(int argc, char *argv[]) {
     OBJModel model(model_filename);
     model.normalize_model_scale();
 
-    Camera camera(width, height, Vector3f(0,2,1), 1.0f);
+    Camera camera(width, height, Vector3f(0,1,0.1), 1.0f);
     camera.lookat(Vector3f(0,0,0));
 
-    GouraudShader shader(camera.get_model(), camera.get_viewport(), camera.get_projection(), Vector3f(1,1,1));
+    auto diffuse = PPMImage::load("../grid.ppm");
+    GouraudShader shader(camera.get_model(), camera.get_viewport(), camera.get_projection(), Vector3f(1,1,1), diffuse);
 
     std::cout << "Rendering image from model " << model_filename << " with resolution " << width << "x" << height << std::endl;
 
