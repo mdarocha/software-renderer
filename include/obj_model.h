@@ -22,7 +22,7 @@ class OBJModel {
 
     public:
         OBJModel();
-        OBJModel(const char* filename);
+        OBJModel(const std::string &filename);
         ~OBJModel();
         friend std::istream& operator >>(std::istream &input, OBJModel &object);
 

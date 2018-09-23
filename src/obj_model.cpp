@@ -7,9 +7,9 @@ OBJModel::OBJModel() {
 
 }
 
-OBJModel::OBJModel(const char* filename) {
+OBJModel::OBJModel(const std::string &filename) {
     std::ifstream file;
-    file.open(filename);
+    file.open(filename.c_str());
 
     file >> (*this);
 

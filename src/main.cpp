@@ -7,9 +7,11 @@
 #include "matrix.h"
 #include "shader/gouraud.h"
 
+void render_to_image(OBJModel &model, std::string &output, int width, int height);
+
 int main(int argc, char *argv[]) {
-    char *model_filename;
-    char *output_filename = (char *)"o.ppm";
+    std::string model_filename;
+    std::string output_filename("o.ppm");
 
     int width, height;
     width = height = 1000;
@@ -28,10 +30,16 @@ int main(int argc, char *argv[]) {
             model_filename  = argv[1];
     }
 
-    PPMImage image(width, height);
-
     OBJModel model(model_filename);
     model.normalize_model_scale();
+
+    render_to_image(model, output_filename, width, height);
+
+    return 0;
+}
+
+void render_to_image(OBJModel &model, std::string &output, int width, int height) {
+    PPMImage image(width, height);
 
     Camera camera(width, height, Vector3f(0,1,0.1), 1.0f);
     camera.lookat(Vector3f(0,0,0));
@@ -39,10 +47,8 @@ int main(int argc, char *argv[]) {
     auto diffuse = PPMImage::load("../grid.ppm");
     GouraudShader shader(camera.get_model(), camera.get_viewport(), camera.get_projection(), Vector3f(1,1,1), diffuse);
 
-    std::cout << "Rendering image from model " << model_filename << " with resolution " << width << "x" << height << std::endl;
+    std::cout << "Rendering image with resolution " << width << "x" << height << std::endl;
 
     DrawingUtils::rasterize(model, image, camera, shader);
-
-    image.write_to_file(std::string(output_filename));
-    return 0;
+    image.write_to_file(output);
 }
