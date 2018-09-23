@@ -18,7 +18,6 @@ class PPMImage : public DrawingTarget {
         virtual int get_width() const { return image.get_width(); };
 
         virtual void set(int x, int y, DrawingColor color) { image.set(x, y, color); };
-        virtual DrawingColor get(int x, int y) const { return image.get(x, y); };
 
         bool write_to_file(std::string filename) const;
         static ImageBuffer<DrawingColor> load(std::string filename);

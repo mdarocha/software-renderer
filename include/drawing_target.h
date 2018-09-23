@@ -15,7 +15,6 @@ class DrawingTarget {
         virtual ~DrawingTarget() {};
 
         virtual void set(int x, int y, DrawingColor color) = 0;
-        virtual DrawingColor get(int x, int y) const = 0;
 
         virtual int get_height() const = 0;
         virtual int get_width() const = 0;
