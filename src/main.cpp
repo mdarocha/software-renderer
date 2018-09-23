@@ -56,7 +56,7 @@ void render_to_image(OBJModel &model, std::string &output, int width, int height
     Camera camera(width, height, Vector3f(0,1,0.1), 1.0f);
     camera.lookat(Vector3f(0,0,0));
 
-    auto diffuse = PPMImage::load("../grid.ppm");
+    auto diffuse = PPMImage::load("../assets/grid.ppm");
     GouraudShader shader(camera.get_model(), camera.get_viewport(), camera.get_projection(), Vector3f(1,1,1), diffuse);
 
     std::cout << "Rendering image with resolution " << width << "x" << height << std::endl;
@@ -71,7 +71,7 @@ void render_realtime(OBJModel &model, int width, int height) {
     Camera camera(width, height, Vector3f(0,1,0.1), 1.0f);
     camera.lookat(Vector3f(0,0,0));
 
-    auto diffuse = PPMImage::load("../grid.ppm");
+    auto diffuse = PPMImage::load("../assets/grid.ppm");
     GouraudShader shader(camera.get_model(), camera.get_viewport(), camera.get_projection(), Vector3f(1,1,1), diffuse);
 
     DrawingUtils::rasterize(model, image_target, camera, shader);
