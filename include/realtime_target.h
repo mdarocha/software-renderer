@@ -7,13 +7,13 @@ class RealtimeTarget : public DrawingTarget {
     bool running;
     SDL_Window *window;
     SDL_Renderer *renderer;
-    SDL_Event *event;
+    SDL_Event event;
     void handle_event(SDL_Event *event);
 
     public:
         RealtimeTarget(int w, int h);
 
-        virtual ~RealtimeTarget() {};
+        virtual ~RealtimeTarget();
 
         virtual int get_height() const { return height; }
         virtual int get_width() const { return width; }

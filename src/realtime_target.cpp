@@ -3,6 +3,12 @@
 
 RealtimeTarget::RealtimeTarget(int w, int h) : width(w), height(h), running(false) {}
 
+RealtimeTarget::~RealtimeTarget() {
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+}
+
 void RealtimeTarget::set(int x, int y, DrawingColor color) {
 
 }
@@ -20,6 +26,8 @@ void RealtimeTarget::start() {
 }
 
 void RealtimeTarget::loop() {
-    while(SDL_PollEvent(event))
-        handle_event(event);
+    while(SDL_PollEvent(&event))
+        handle_event(&event);
+
+    SDL_RenderPresent(renderer);
 }
