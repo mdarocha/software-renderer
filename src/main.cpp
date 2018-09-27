@@ -21,20 +21,20 @@ int main(int argc, char *argv[]) {
     width = height = 1000;
 
     bool realtime = false;
-
+    std::cout << argv[2];
     switch(argc) {
         default:
-            std::cout << "Usage: softrender model.obj output.ppm [width] [height] [--realtime]" << std::endl;
+            std::cout << "Usage: softrender model.obj [output.ppm] [--realtime] [width] [height]" << std::endl;
             return 1;
-        case 6:
-            if(std::strcmp(argv[5], "--realtime"));
-                realtime = true;
         case 5:
             std::sscanf(argv[4], "%d", &height);
         case 4:
             std::sscanf(argv[3], "%d", &width);
         case 3:
-            output_filename = argv[2];
+            if(std::string(argv[2]) == "--realtime")
+                realtime = true;
+            else
+                output_filename = argv[2];
         case 2:
             model_filename  = argv[1];
     }
@@ -74,5 +74,9 @@ void render_realtime(OBJModel &model, int width, int height) {
     auto diffuse = PPMImage::load("../assets/grid.ppm");
     GouraudShader shader(camera.get_model(), camera.get_viewport(), camera.get_projection(), Vector3f(1,1,1), diffuse);
 
-    DrawingUtils::rasterize(model, image_target, camera, shader);
+    image_target.start();
+    while(image_target.is_running()) {
+        DrawingUtils::rasterize(model, image_target, camera, shader);
+        image_target.loop();
+    }
 }
