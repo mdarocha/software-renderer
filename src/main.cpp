@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdio>
+#include <cmath>
 
 #include "ppm_image.h"
 #include "realtime_target.h"
@@ -65,9 +66,19 @@ void render_to_image(OBJModel &model, std::string &output, int width, int height
     image.write_to_file(output);
 }
 
+Vector3f spherical(double hor, double ver, double dist) {
+    Vector3f pos;
+    pos.x = dist * sin(hor) * sin(ver);
+    pos.y = dist * cos(ver);
+    pos.z = dist * cos(hor) * sin(ver);
+    return pos;
+}
+
 void render_realtime(OBJModel &model, int width, int height) {
-    Vector3f cpos(0,1,0.1);
-    Camera camera(width, height, cpos, 1.0f);
+    double hor = 45, ver = 45, dist = 1;
+    constexpr double move = 0.05;
+
+    Camera camera(width, height, spherical(hor, ver, dist), 1.0f);
     camera.lookat(Vector3f(0,0,0));
 
     auto diffuse = PPMImage::load("../assets/grid.ppm");
@@ -77,16 +88,16 @@ void render_realtime(OBJModel &model, int width, int height) {
         if(event->type == SDL_KEYDOWN) {
             switch(event->key.keysym.sym) {
                 case SDLK_LEFT:
-                    cpos.x--; break;
+                    hor -= move; break;
                 case SDLK_RIGHT:
-                    cpos.x++; break;
+                    hor += move; break;
                 case SDLK_UP:
-                    cpos.y++; break;
+                    ver += move; break;
                 case SDLK_DOWN:
-                    cpos.y--; break;
+                    ver -= move; break;
             }
-            std::cout << cpos << std::endl;
-            camera.position = cpos;
+
+            camera.position = spherical(hor, ver, dist);
             camera.lookat(Vector3f(0,0,0));
             shader.update_model(camera.get_model());
         }

@@ -1,5 +1,5 @@
 #include <SDL2/SDL.h>
-#include "realtime_target.h";
+#include "realtime_target.h"
 
 RealtimeTarget::RealtimeTarget(int w, int h, std::function<void(SDL_Event*)> handler) : width(w), height(h), event_handler(handler), running(false) {}
 
@@ -33,5 +33,7 @@ void RealtimeTarget::loop() {
         handle_event(&event);
 
     SDL_RenderPresent(renderer);
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 }
