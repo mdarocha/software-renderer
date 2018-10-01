@@ -32,6 +32,10 @@ class ImageBuffer {
             return data[x + y * width];
         }
 
+        void clear() {
+            std::memset(data.get(), 0, sizeof(T) * width * height);
+        }
+
         int get_width() const { return width; }
         int get_height() const { return height; }
 
