@@ -10,6 +10,8 @@ namespace DrawingUtils {
 
         DrawingColor color {255,255,255};
 
+        camera.zbuffer.clear();
+
         for(int i = 0; i < nfaces; i++) {
             v = model.get_face_vertices(i);
             n = model.get_face_normals(i);

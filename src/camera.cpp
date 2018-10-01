@@ -18,18 +18,6 @@ void Camera::setup_mat() {
     projection[3][2] = -1.0f / c;
 }
 
-const Mat4x4f Camera::get_viewport() const {
-    return viewport;
-}
-
-const Mat4x4f Camera::get_model() const {
-    return model;
-}
-
-const Mat4x4f Camera::get_projection() const {
-    return projection;
-}
-
 void Camera::lookat(Vector3f p) {
     Vector3f up(0,-1,0);
     Vector3f z = (position - p).normalize();

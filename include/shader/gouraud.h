@@ -14,6 +14,8 @@ struct GouraudShader : public Shader {
 
     GouraudShader(Mat4x4f m, Mat4x4f v, Mat4x4f p, Vector3f light, ColorBuffer &diff) : model(m), viewport(v), projection(p), light_dir(light.normalize()), diffuse(diff) {};
 
+    void update_model(Mat4x4f m) { model = m; }
+
     virtual Vector4f vertex(Vector3f v, Vector3f normal, Vector2f uv, int n) {
         uvmat.set_column(n, uv);
 
