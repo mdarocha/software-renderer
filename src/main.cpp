@@ -11,6 +11,8 @@
 #include "matrix.h"
 #include "shader/gouraud.h"
 
+#include "fallback_image.h"
+
 void render_to_image(OBJModel &model, std::string &output, int width, int height);
 void render_realtime(OBJModel &model, int width, int height);
 
@@ -57,7 +59,7 @@ void render_to_image(OBJModel &model, std::string &output, int width, int height
     Camera camera(width, height, Vector3f(0,1,0.1), 1.0f);
     camera.lookat(Vector3f(0,0,0));
 
-    auto diffuse = PPMImage::load("../assets/grid.ppm");
+    auto diffuse = PPMImage::load(fallback_ppm, fallback_ppm_len);
     GouraudShader shader(camera.get_model(), camera.get_viewport(), camera.get_projection(), Vector3f(1,1,1), diffuse);
 
     std::cout << "Rendering image with resolution " << width << "x" << height << std::endl;
@@ -81,7 +83,7 @@ void render_realtime(OBJModel &model, int width, int height) {
     Camera camera(width, height, spherical(hor, ver, dist), 1.0f);
     camera.lookat(Vector3f(0,0,0));
 
-    auto diffuse = PPMImage::load("../assets/grid.ppm");
+    auto diffuse = PPMImage::load(fallback_ppm, fallback_ppm_len);
     GouraudShader shader(camera.get_model(), camera.get_viewport(), camera.get_projection(), Vector3f(1,1,1), diffuse);
 
     auto handler = [&](SDL_Event *event) {

@@ -21,4 +21,5 @@ class PPMImage : public DrawingTarget {
 
         bool write_to_file(std::string filename) const;
         static ImageBuffer<DrawingColor> load(std::string filename);
+        static ImageBuffer<DrawingColor> load(unsigned char array[], unsigned int len);
 };
